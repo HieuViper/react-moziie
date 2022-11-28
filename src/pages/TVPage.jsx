@@ -10,8 +10,9 @@ import ReactPaginate from "react-paginate";
 import MovieCardSkeleton from "../components/skeleton/MovieCardSkeleton";
 import TVCard from "../components/moviecard/TVCard";
 
+//https://api.themoviedb.org/3/tv/popular?api_key=<<api_key>>
 const itemsPerPage = 20;
-const MoviePage = () => {
+const TVPage = () => {
   const [nextPage, setNextPage] = useState(1);
   console.log(
     "🚀 ~ file: MoviePage.jsx ~ line 14 ~ MoviePage ~ nextPage",
@@ -28,7 +29,7 @@ const MoviePage = () => {
     search
   );
   const [url, setUrl] = useState(
-    `https://api.themoviedb.org/3/movie/popular?api_key=${API_THEMOVIEDB}`
+    `https://api.themoviedb.org/3/tv/popular?api_key=${API_THEMOVIEDB}`
   );
   console.log("🚀 ~ file: MoviePage.jsx ~ line 31 ~ MoviePage ~ url", url);
   const { data, error } = useSWR(url, fetcher);
@@ -62,15 +63,15 @@ const MoviePage = () => {
   useEffect(() => {
     if (search === "" || nextPage !== 1) {
       setUrl(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${API_THEMOVIEDB}&page=${nextPage}`
+        `https://api.themoviedb.org/3/tv/popular?api_key=${API_THEMOVIEDB}&page=${nextPage}`
       );
     } else if (search !== "" || nextPage !== 1) {
       setUrl(
-        `https://api.themoviedb.org/3/search/movie?api_key=${API_THEMOVIEDB}&query=${search}&page=${nextPage}`
+        `https://api.themoviedb.org/3/search/tv?api_key=${API_THEMOVIEDB}&query=${search}&page=${nextPage}`
       );
     } else {
       setUrl(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${API_THEMOVIEDB}&page=${nextPage}`
+        `https://api.themoviedb.org/3/tv/popular?api_key=${API_THEMOVIEDB}&page=${nextPage}`
       );
     }
   }, [search, nextPage]);
@@ -79,7 +80,7 @@ const MoviePage = () => {
     <Fragment>
       <div className="page-container mb-10 w-[300px]">
         <Search
-          placeholder="Find films that best fit you..."
+          placeholder="Find TV shows that best fit you..."
           search={search}
           setSearch={setSearch}
         ></Search>
@@ -97,9 +98,7 @@ const MoviePage = () => {
       <div className="flex flex-wrap justify-center items-center page-container gap-10 ">
         {!isLoading &&
           movies.length > 0 &&
-          movies.map((item) => (
-            <MovieCard key={item.id} item={item}></MovieCard>
-          ))}
+          movies.map((item) => <TVCard key={item.id} item={item}></TVCard>)}
       </div>
       <ReactPaginate
         breakLabel="..."
@@ -115,4 +114,4 @@ const MoviePage = () => {
   );
 };
 
-export default MoviePage;
+export default TVPage;

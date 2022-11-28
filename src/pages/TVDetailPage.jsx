@@ -12,23 +12,26 @@ import "react-circular-progressbar/dist/styles.css";
 import CastMovieDetail from "../components/cast/CastMovieDetail";
 import ReviewsMovieDetail from "../components/reviews/ReviewsMovieDetail";
 import SimilarMovieDetail from "../components/similar/SimilarMovieDetail";
+import SimilarTVDetail from "../components/similar/SimilarTVDetail";
+import CastTVDetail from "../components/cast/CastTVDetail";
+import ReviewTVDetail from "../components/reviews/ReviewTVDetail";
 
-const MovieDetailPage = () => {
+const TVDetailPage = () => {
   const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState("1");
   const [searchRs, setSearchRs] = useState("");
   console.log(
-    "🚀 ~ file: MovieDetailPage.jsx ~ line 19 ~ MovieDetailPage ~ searchRs",
+    "🚀 ~ file: TVDetailPage.jsx ~ line 19 ~ TVDetailPage ~ searchRs",
     searchRs
   );
   const menuRef = useRef(null);
-  const { movieId } = useParams();
+  const { tvshowId } = useParams();
   const { data, error } = useSWR(
-    `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_THEMOVIEDB}`,
+    `https://api.themoviedb.org/3/tv/${tvshowId}?api_key=${API_THEMOVIEDB}`,
     fetcher
   );
   console.log(
-    "🚀 ~ file: MovieDetailPage.jsx ~ line 18 ~ MovieDetailPage ~ data",
+    "🚀 ~ file: TVDetailPage.jsx ~ line 18 ~ TVDetailPage ~ data",
     data
   );
 
@@ -65,8 +68,8 @@ const MovieDetailPage = () => {
     title,
     spoken_languages,
     imdb_id,
-    release_date,
-    runtime,
+    first_air_date,
+    episode_run_time,
     status,
     vote_average,
     tagline,
@@ -80,7 +83,7 @@ const MovieDetailPage = () => {
   };
 
   if (searchRs !== "") {
-    navigate("/movies", { state: searchRs });
+    navigate("/tv-shows", { state: searchRs });
   }
 
   return (
@@ -109,7 +112,7 @@ const MovieDetailPage = () => {
             </div>
             <button
               className="flex items-center py-4 px-6 bg-primary rounded-3xl gap-1 text-xl hover:opacity-80"
-              onClick={() => navigate(`/movies/${id}/watch`, { state: id })}
+              onClick={() => navigate(`/tv-shows/${id}/watch`, { state: id })}
             >
               Watch Now
               <svg
@@ -155,7 +158,7 @@ const MovieDetailPage = () => {
             <div className="ep-length flex flex-col items-center">
               <div className="uppercase font-bold mb-3">EP LENGTH</div>
               <div className="text-gray-400">
-                <span className="text-lg mr-1">{runtime}</span>
+                <span className="text-lg mr-1">{episode_run_time[0]}</span>
                 <span>min</span>
               </div>
             </div>
@@ -193,15 +196,15 @@ const MovieDetailPage = () => {
                 tagline={tagline}
                 overview={overview}
                 status={status}
-                release_date={release_date}
+                first_air_date={first_air_date}
                 spoken_languages={spoken_languages}
               />
             ) : (
               ""
             )}
 
-            {currentTab === "2" ? <CastMovieDetail /> : ""}
-            {currentTab === "3" ? <ReviewsMovieDetail /> : ""}
+            {currentTab === "2" ? <CastTVDetail /> : ""}
+            {currentTab === "3" ? <ReviewTVDetail /> : ""}
           </div>
           <div className="basis-3/12 pl-5">
             <Media />
@@ -217,7 +220,7 @@ const MovieDetailPage = () => {
           ></Search>
         </div>
         <p className="text-xl font-semibold mb-3">Similar</p>
-        <SimilarMovieDetail movieId={movieId} />
+        <SimilarTVDetail tvshowId={tvshowId} />
       </div>
     </div>
   );
@@ -227,7 +230,7 @@ function Overall({
   tagline,
   overview,
   status,
-  release_date,
+  first_air_date,
   spoken_languages,
 }) {
   return (
@@ -240,7 +243,7 @@ function Overall({
       <div className="details self-start">
         <div className="uppercase font-bold text-lg mb-3">Details</div>
         <p className="text-gray-400">Status: {status}</p>
-        <p className="text-gray-400">Last air date: {release_date}</p>
+        <p className="text-gray-400">Last air date: {first_air_date}</p>
         <p className="text-gray-400">
           Language: {spoken_languages.map((item) => item.english_name + " / ")}
         </p>
@@ -251,9 +254,9 @@ function Overall({
 
 function Media() {
   //https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key=<<api_key>>
-  const { movieId } = useParams();
+  const { tvshowId } = useParams();
   const { data, error } = useSWR(
-    `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_THEMOVIEDB}`,
+    `https://api.themoviedb.org/3/tv/${tvshowId}/videos?api_key=${API_THEMOVIEDB}`,
     fetcher
   );
 
@@ -261,7 +264,7 @@ function Media() {
 
   if (data.results.length <= 0) return null;
   const { results } = data;
-  console.log("🚀 ~ file: MovieDetailPage.jsx ~ line 241 ~ Media ~ data", data);
+  console.log("🚀 ~ file: TVDetailPage.jsx ~ line 241 ~ Media ~ data", data);
   return (
     <>
       <div className="uppercase text-lg font-bold mb-6">Media</div>
@@ -289,4 +292,4 @@ function Media() {
   );
 }
 
-export default MovieDetailPage;
+export default TVDetailPage;

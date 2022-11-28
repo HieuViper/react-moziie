@@ -25,6 +25,12 @@ const Header = () => {
           >
             Movie
           </NavLink>
+          <NavLink
+            to="/tv-shows"
+            className={({ isActive }) => (isActive ? "text-primary" : "")}
+          >
+            TV Show
+          </NavLink>
         </div>
       </header>
     </Fragment>
